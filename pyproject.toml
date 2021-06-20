@@ -6,9 +6,14 @@ authors = ["Balint Erdosi <balint@berdosi.eu>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+PyPDF2 = "^1.26.0"
+ocrmypdf = "^12.2.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
+
+[tool.poetry.scripts]
+uniteocr = "uniteocr.__main__:uniteocr"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

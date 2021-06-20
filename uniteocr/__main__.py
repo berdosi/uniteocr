@@ -48,12 +48,11 @@ def write_merged_file(pdf_object: PdfFileMerger, target_path: str) -> None:
 
 def uniteocr():
     '''Entry point of the module'''
-    parser = argparse.ArgumentParser(description='Merge and OCR PDF files.')
-    parser.add_argument('file_prefix')
+
+    file_prefix, languages = get_args()
 
     basicConfig(level=INFO)
-    args = parser.parse_args()
-    file_prefix: str = args.file_prefix
+
     files_to_merge: Iterable[str] = get_files(file_prefix)
     merged_file: PdfFileMerger = get_merged_file(files_to_merge)
 
@@ -67,12 +66,31 @@ def uniteocr():
         ocr(
             input_file=target_location,
             output_file=target_location,
-            language='hun+eng',
+            language=languages,
             skip_text=True)
         log('all done, enjoy your file.')
 
     else:
         log('This ain\'t a yes, not merging, okay.')
+
+
+def get_args():
+    parser = argparse.ArgumentParser(description='Merge and OCR PDF files.')
+    parser.add_argument(
+        'file_prefix',
+        help='''Set the file nane and path prefix matching all the PDF files.
+            An asterisk (*) is implied at the end.''')
+    parser.add_argument(
+        'languages',
+        default='hun+eng',
+        help='''Set the languages of the documents. E.g. hun+eng.
+            Find available languages like `tesseract --list-langs`''')
+    
+    args = parser.parse_args()
+    file_prefix: str = args.file_prefix
+    languages: str = args.languages
+
+    return (file_prefix, languages)
 
 
 if __name__ == '__main__':
